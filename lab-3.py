@@ -132,7 +132,7 @@ st.dataframe(df)
 ###PARTE 3###
     #GIMNASIO#
 st.header("Filtración de datos - gimnasio")
-df= pd.read_csv("GymExerciseTracking.csv")
+df1 = pd.read_csv("GymExerciseTracking.csv")
 
 columnas=[
     "Age",
@@ -152,9 +152,9 @@ columnas=[
     "BMI"
 ]
 
-col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas)
+col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas, key="columna_gym")
 valor_ref=st.text_input("Ingrese el valor de referencia para filtrar: ")
-igualdad=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"])
+igualdad=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="igualdad_gym")
 genero=st.selectbox("Seleccione el género para filtrar: ", ["Male", "Female", "Todos"])
 tipo_ej=st.selectbox("Seleccione el tipo de ejercicio para filtrar: ", ["Yoga", "HIIT", "Cardio", "Strenght", "Todos"])
 
@@ -185,7 +185,7 @@ if st.button("Filtrar datos"):
 
     #NETFLIX#
 st.header("Filtración de datos - Netflix")
-df= pd.read_csv("netflix_titles.csv")
+df2 = pd.read_csv("netflix_titles.csv")
 columnas=[
     "show_id",
     "type",
@@ -200,16 +200,17 @@ columnas=[
     "listed_in",
     "description"
 ]
-col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas)
+col_netflix=st.selectbox("Seleccione la columna para filtrar: ", columnas, key="columna_netflix")
 id=st.text_input("Ingrese el ID de la serie/pelicula para filtrar (formato: 's' seguido de un número)")
 tipo=st.selectbox("Seleccione el tipo de programa para filtrar: ", ["Movie", "TV Show", "Todos"])
 origen=st.text_input("Ingrese el país de origen para filtrar (filtrado en inglés): ")
 added=st.text_input("Ingrese la fecha de añadimiento a Netflix para filtrar (formato: 'DD -abrv. mes- AA')")
 release=st.text_input("Ingrese el año de referencia para filtrar (formato: 'AAAA')")
 rating=st.selectbox("Seleccione la clasificación por edades para filtrar: ", ["G", "TV-MA", "TV-Y7", "PG", "PG-13", "TV-14", "R", "Todos"])
-duracion_min=st.text_input("Ingrese la duración mínima para filtrar (en formato: '_ min':" )
-duracion_season=st.text_input("Ingrese la cantidad mínima de temporadas para filtrar (en formato: '_ Seasons':" )
+duracion_min=st.text_input("Ingrese la duración de minutos para filtrar: ")
+duracion_season=st.text_input("Ingrese la cantidad de temporadas para filtrar: ")
 listed=st.multiselect("Seleccione las categorías (géneros) para filtrar: ", generos)
+num_comparacion=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion")
 
 if st.button("Filtrar datos de Netflix"):
     df_filtrado=df.copy()
@@ -230,10 +231,25 @@ if st.button("Filtrar datos de Netflix"):
         df_filtrado = df_filtrado[df_filtrado["country"]==origen]
     
     if added:
-        df_filtrado = df_filtrado[df_filtrado["date_added"]==added]
+        if num_comparacion=="Igual a":
+            df_filtrado = df_filtrado[df_filtrado["date_added"].str.contains(added)]
+        elif num_comparacion=="Mayor que":
+            df_filtrado = df_filtrado[df_filtrado["date_added"] > added]
+        elif num_comparacion=="Menor que":
+            df_filtrado = df_filtrado[df_filtrado["date_added"] < added]
+        elif num_comparacion=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para duración mínima")
+
 
     if duracion_min:
-        df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_min)]
+        if num_comparacion=="Igual a":
+            df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_min)]
+        elif num_comparacion=="Mayor que":
+            df_filtrado = df_filtrado[df_filtrado["duration"] > float(duracion_min)]
+        elif num_comparacion=="Menor que":
+            df_filtrado = df_filtrado[df_filtrado["duration"] < float(duracion_min)]
+        elif num_comparacion=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para duración mínima")
 
     if duracion_season:
         df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_season)]
@@ -242,5 +258,9 @@ if st.button("Filtrar datos de Netflix"):
         for genero in listed:
             df_filtrado = df_filtrado[df_filtrado["listed_in"].str.contains(genero)]
 
+    
     st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado)
+
+#STEAM STORE#
+
