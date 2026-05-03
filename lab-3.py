@@ -130,7 +130,7 @@ st.dataframe(df)
 
 
 ###PARTE 3###
-
+    #GIMNASIO#
 st.header("Filtración de datos - gimnasio")
 df= pd.read_csv("GymExerciseTracking.csv")
 
@@ -172,7 +172,7 @@ if st.button("Filtrar datos"):
     
     elif igualdad=="No aplica":
         st.warning("No se aplicará ningún filtro de comparación")
-        
+
     if genero != "Todos":
         df_filtrado = df_filtrado[df_filtrado["Gender"]==genero]
 
@@ -181,4 +181,66 @@ if st.button("Filtrar datos"):
 
         st.success("Datos filtrados exitosamente")
 
+    st.dataframe(df_filtrado)
+
+    #NETFLIX#
+st.header("Filtración de datos - Netflix")
+df= pd.read_csv("netflix_titles.csv")
+columnas=[
+    "show_id",
+    "type",
+    "title",
+    "director",
+    "cast",
+    "country",
+    "date_added",
+    "release_year",
+    "rating",
+    "duration",
+    "listed_in",
+    "description"
+]
+col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas)
+id=st.text_input("Ingrese el ID de la serie/pelicula para filtrar (formato: 's' seguido de un número)")
+tipo=st.selectbox("Seleccione el tipo de programa para filtrar: ", ["Movie", "TV Show", "Todos"])
+origen=st.text_input("Ingrese el país de origen para filtrar (filtrado en inglés): ")
+added=st.text_input("Ingrese la fecha de añadimiento a Netflix para filtrar (formato: 'DD -abrv. mes- AA')")
+release=st.text_input("Ingrese el año de referencia para filtrar (formato: 'AAAA')")
+rating=st.selectbox("Seleccione la clasificación por edades para filtrar: ", ["G", "TV-MA", "TV-Y7", "PG", "PG-13", "TV-14", "R", "Todos"])
+duracion_min=st.text_input("Ingrese la duración mínima para filtrar (en formato: '_ min':" )
+duracion_season=st.text_input("Ingrese la cantidad mínima de temporadas para filtrar (en formato: '_ Seasons':" )
+listed=st.multiselect("Seleccione las categorías (géneros) para filtrar: ", generos)
+
+if st.button("Filtrar datos de Netflix"):
+    df_filtrado=df.copy()
+
+    if id:
+        df_filtrado = df_filtrado[df_filtrado["show_id"]==id]
+
+    if tipo != "Todos":
+        df_filtrado = df_filtrado[df_filtrado["type"]==tipo]
+
+    if release:
+        df_filtrado = df_filtrado[df_filtrado["release_year"]==int(release)]
+
+    if rating != "Todos":
+        df_filtrado = df_filtrado[df_filtrado["rating"]==rating]
+
+    if origen:
+        df_filtrado = df_filtrado[df_filtrado["country"]==origen]
+    
+    if added:
+        df_filtrado = df_filtrado[df_filtrado["date_added"]==added]
+
+    if duracion_min:
+        df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_min)]
+
+    if duracion_season:
+        df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_season)]
+
+    if listed:
+        for genero in listed:
+            df_filtrado = df_filtrado[df_filtrado["listed_in"].str.contains(genero)]
+
+    st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado)
