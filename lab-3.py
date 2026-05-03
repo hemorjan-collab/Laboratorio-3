@@ -186,6 +186,10 @@ if st.button("Filtrar datos"):
     #NETFLIX#
 st.header("Filtración de datos - Netflix")
 df2 = pd.read_csv("netflix_titles.csv")
+df2["duration"] = df2["duration"].str.extract(r"(\d+)").astype(float) #Extraer solo el número de la duración y convertirlo a float para facilitar las comparaciones numéricas
+#\d representa un dígito, + indica que se buscan uno o más dígitos, y los paréntesis indican que queremos capturar esa parte específica del texto. 
+#luego, el resultado se convierte a tipo float para permitir comparaciones numéricas en la filtración.
+
 columnas=[
     "show_id",
     "type",
@@ -213,54 +217,54 @@ listed=st.multiselect("Seleccione las categorías (géneros) para filtrar: ", ge
 num_comparacion=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion")
 
 if st.button("Filtrar datos de Netflix"):
-    df_filtrado=df.copy()
+    df_filtrado2=df2.copy()
 
     if id:
-        df_filtrado = df_filtrado[df_filtrado["show_id"]==id]
+        df_filtrado2 = df_filtrado2[df_filtrado2["show_id"]==id]
 
     if tipo != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["type"]==tipo]
+        df_filtrado2 = df_filtrado2[df_filtrado2["type"]==tipo]
 
     if release:
-        df_filtrado = df_filtrado[df_filtrado["release_year"]==int(release)]
+        df_filtrado2 = df_filtrado2[df_filtrado2["release_year"]==int(release)]
 
     if rating != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["rating"]==rating]
+        df_filtrado2 = df_filtrado2[df_filtrado2["rating"]==rating]
 
     if origen:
-        df_filtrado = df_filtrado[df_filtrado["country"]==origen]
+        df_filtrado2 = df_filtrado2[df_filtrado2["country"]==origen]
     
     if added:
         if num_comparacion=="Igual a":
-            df_filtrado = df_filtrado[df_filtrado["date_added"].str.contains(added)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"].str.contains(added)]
         elif num_comparacion=="Mayor que":
-            df_filtrado = df_filtrado[df_filtrado["date_added"] > added]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] > added]
         elif num_comparacion=="Menor que":
-            df_filtrado = df_filtrado[df_filtrado["date_added"] < added]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] < added]
         elif num_comparacion=="No aplica":
             st.warning("No se aplicará ningún filtro de comparación para duración mínima")
 
 
     if duracion_min:
         if num_comparacion=="Igual a":
-            df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_min)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["duration"]==float(duracion_min)]
         elif num_comparacion=="Mayor que":
-            df_filtrado = df_filtrado[df_filtrado["duration"] > float(duracion_min)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["duration"] > float(duracion_min)]
         elif num_comparacion=="Menor que":
-            df_filtrado = df_filtrado[df_filtrado["duration"] < float(duracion_min)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["duration"] < float(duracion_min)]
         elif num_comparacion=="No aplica":
             st.warning("No se aplicará ningún filtro de comparación para duración mínima")
 
     if duracion_season:
-        df_filtrado = df_filtrado[df_filtrado["duration"].str.contains(duracion_season)]
+        df_filtrado2 = df_filtrado2[df_filtrado2["duration"].str.contains(duracion_season)]
 
     if listed:
         for genero in listed:
-            df_filtrado = df_filtrado[df_filtrado["listed_in"].str.contains(genero)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["listed_in"].str.contains(genero)]
 
     
     st.success("Datos filtrados exitosamente")
-    st.dataframe(df_filtrado)
+    st.dataframe(df_filtrado2)
 
 #STEAM STORE#
 
