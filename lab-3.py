@@ -42,3 +42,7 @@ if st.button("Agregar registro"):
         "BMI": bmi
 }
     
+    df = pd.concat([df, pd.DataFrame([nuevo_registro])])
+    st.success("Registro agregado exitosamente")
+
+st.dataframe(df)
