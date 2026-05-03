@@ -3,7 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 st.title("Análisis de dataset")
-
+ #DATASET|1
 st.header("Agregar nuevo registro de Gimnasio")
 df=pd.read_csv("GymExerciseTracking.csv")
 
@@ -45,4 +45,85 @@ if st.button("Agregar registro"):
     df = pd.concat([df, pd.DataFrame([nuevo_registro])])
     st.success("Registro agregado exitosamente")
 
+st.dataframe(df)
+
+ #DATASET|2
+
+generos = [
+    "Action & Adventure",
+    "Anime Features",
+    "Anime Series",
+    "British TV Shows",
+    "Children & Family Movies",
+    "Classic Movies",
+    "Comedies",
+    "Crime TV Shows",
+    "Cult Movies",
+    "Docuseries",
+    "Documentaries",
+    "Dramas",
+    "Faith & Spirituality",
+    "Horror Movies",
+    "Independent Movies",
+    "International Movies",
+    "International TV Shows",
+    "Kids' TV",
+    "Korean TV Shows",
+    "LGBTQ Movies",
+    "Music & Musicals",
+    "Reality TV",
+    "Romantic Movies",
+    "Romantic TV Shows",
+    "Sci-Fi & Fantasy",
+    "Science & Nature TV",
+    "Spanish-Language TV Shows",
+    "Sports Movies",
+    "Teen TV Shows",
+    "Thrillers",
+    "TV Action & Adventure",
+    "TV Comedies",
+    "TV Dramas",
+    "TV Horror",
+    "TV Mysteries",
+    "TV Sci-Fi & Fantasy",
+    "TV Shows",
+    "TV Thrillers"
+]
+
+st.header("Agregar nuevo registro de serie/pelicula de Netflix")
+df=pd.read_csv("netflix_titles.csv")
+
+id=st.text_input("Ingrese el ID de la serie/pelicula (formato: 's' seguido de un número)")
+tipo=st.selectbox("Seleccione el tipo de programa: ", ["Movie", "TV Show"])
+nombre=st.text_input("Ingrese el nombre de la serie/pelicula")
+director=st.text_input("Ingrese el nombre del director")    
+cast=st.text_input("Ingrese el elenco principal (separado por comas)")
+pais=st.text_input("Ingrese el país de origen")
+añadido=st.text_input("Ingrese la fecha de añadimiento a Netflix (formato: 'DD -abrv. mes- AA')")
+estreno=st.text_input("Ingrese el año de estreno (formato: 'AAAA')")
+rating=st.selectbox("Seleccione la clasificación por edades: ", ["G", "TV-MA", "TV-Y7", "PG", "PG-13", "TV-14", "R"])
+duracion=st.text_input("Ingrese la duración (formato: '_ min' para películas o '_ Seasons' para series)")
+categoria=st.multiselect("Seleccione las categorías (géneros) de la serie/pelicula: ", generos)
+desc=st.text_area("Ingrese una breve descripción de la serie/pelicula")
+
+if st.button("Agregar serie/pelicula"):
+
+    nuevo_stream={
+        "show_id": id,
+        "type": tipo,
+        "title": nombre,
+        "director": director,
+        "cast": cast,
+        "country": pais,
+        "date_added": añadido,
+        "release_year": estreno,
+        "rating": rating,
+        "duration": duracion,
+        "listed_in": ", ".join(categoria),
+        "description": desc,
+
+}
+    
+    df = pd.concat([df, pd.DataFrame([nuevo_stream])])
+    st.success("Serie/pelicula agregado exitosamente")
 st.dataframe(df)
