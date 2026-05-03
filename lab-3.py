@@ -189,6 +189,8 @@ df2 = pd.read_csv("netflix_titles.csv")
 df2["duration"] = df2["duration"].str.extract(r"(\d+)").astype(float) #Extraer solo el número de la duración y convertirlo a float para facilitar las comparaciones numéricas
 #\d representa un dígito, + indica que se buscan uno o más dígitos, y los paréntesis indican que queremos capturar esa parte específica del texto. 
 #luego, el resultado se convierte a tipo float para permitir comparaciones numéricas en la filtración.
+df2["date_added"] = pd.to_datetime(df2["date_added"], errors="coerce") #Convertir la columna "date_added" a formato datetime,
+#con manejo de errores para fechas mal formateadas
 
 columnas=[
     "show_id",
@@ -235,12 +237,15 @@ if st.button("Filtrar datos de Netflix"):
         df_filtrado2 = df_filtrado2[df_filtrado2["country"]==origen]
     
     if added:
+        fecha_usuario = pd.to_datetime(added, errors="coerce") # Convertir la fecha ingresada por el usuario a formato datetime,
+       #con manejo de errores para fechas mal formateadas
+
         if num_comparacion=="Igual a":
-            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"].str.contains(added)]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"]==fecha_usuario]
         elif num_comparacion=="Mayor que":
-            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] > added]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] > fecha_usuario]
         elif num_comparacion=="Menor que":
-            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] < added]
+            df_filtrado2 = df_filtrado2[df_filtrado2["date_added"] < fecha_usuario]
         elif num_comparacion=="No aplica":
             st.warning("No se aplicará ningún filtro de comparación para duración mínima")
 
