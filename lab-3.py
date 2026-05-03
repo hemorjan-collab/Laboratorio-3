@@ -2,17 +2,17 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-st.title("Análisis de datasest")
+st.title("Análisis de dataset")
 
 st.header("Agregar nuevo registro de Gimnasio")
-df=pd.read_csv("GymExcerciseTracking.csv")
+df=pd.read_csv("GymExerciseTracking.csv")
 
 edad =st.number_input("Ingrese su edad")
 genero=st.selectbox("Seleccione su género",["Male","Female"])
 peso= st.number_input("Ingrese su peso en Kg")
 altura=st.number_input("Ingrese su altura en metros (m)")
 max_bmp=st.number_input("Ingrese su frecuencia cardíaca máxima (bpm)")
-bmp_usual=st.number_input=("Ingrese su frecuencia cardíaca usual (bpm)")
+bmp_usual=st.number_input("Ingrese su frecuencia cardíaca usual (bpm)")
 bmp_reposo=st.number_input("Ingrese su frecuencia cardíaca en reposo (bpm)")
 duracion_sesion=st.number_input("Ingrese la duración de su sesión de ejercicio en horas")
 calorias_quemadas=st.number_input("Ingrese las calorías quemadas durante su sesión de ejercicio")
