@@ -127,3 +127,31 @@ if st.button("Agregar serie/pelicula"):
     df = pd.concat([df, pd.DataFrame([nuevo_stream])])
     st.success("Serie/pelicula agregado exitosamente")
 st.dataframe(df)
+
+
+###PARTE 3###
+
+st.header("Filtración de datos - gimnasio")
+df= pd.read_csv("GymExerciseTracking.csv")
+
+columnas=[
+    "Age",
+    "Gender",
+    "Weight (kg)",
+    "Height (m)",
+    "Max_BPM",
+    "Avg_BPM",
+    "Resting_BPM",
+    "Session_Duration (hours)",
+    "Calories_Burned",
+    "Workout_Type",
+    "Fat_Percentage",
+    "Water_Intake (liters)",
+    "Workout_Frequency (days/week)",
+    "Experience_Level",
+    "BMI"
+]
+
+col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas)
+valor_ref=st.text_input("Ingrese el valor de referencia para filtrar: ")
+igualdad=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que"])
