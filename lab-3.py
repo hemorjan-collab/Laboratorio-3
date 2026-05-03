@@ -22,3 +22,23 @@ toma_de_agua=st.number_input("Ingrese la cantidad de agua que toma diariamente (
 frecuencia=st.number_input("Ingrese la frecuencia de sus sesiones de ejercicio (dias por semana)")
 experiencia=st.selectbox("Seleccione su nivel de experiencia en el gimnasio", ["1", "2", "3"])
 bmi=st.number_input("Ingrese su índice de masa corporal (BMI)")
+
+if st.button("Agregar registro"):
+    nuevo_registro={
+        "Age": edad,
+        "Gender": genero,
+        "Weight (kg)": peso,
+        "Height (m)": altura,
+        "Max_BPM": max_bmp,
+        "Avg_BPM": bmp_usual,
+        "Resting_BPM": bmp_reposo,
+        "Session_Duration (hours)": duracion_sesion,
+        "Calories_Burned": calorias_quemadas,
+        "Workout_Type": tipo_ejercicio,
+        "Fat_Percentage": procentaje_grasa,
+        "Water_Intake (liters)": toma_de_agua,
+        "Workout_Frequency (days/week)": frecuencia,
+        "Experience_Level": experiencia,
+        "BMI": bmi
+}
+    
