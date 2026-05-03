@@ -155,8 +155,8 @@ columnas=[
 col_elegida=st.selectbox("Seleccione la columna para filtrar: ", columnas)
 valor_ref=st.text_input("Ingrese el valor de referencia para filtrar: ")
 igualdad=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que"])
-genero=st.selectbox("Seleccione el género para filtrar: ", ["Male", "Female"])
-tipo_ej=st.selectbox("Seleccione el tipo de ejercicio para filtrar: ", ["Yoga", "HIIT", "Cardio", "Strenght"])
+genero=st.selectbox("Seleccione el género para filtrar: ", ["Male", "Female", "Todos"])
+tipo_ej=st.selectbox("Seleccione el tipo de ejercicio para filtrar: ", ["Yoga", "HIIT", "Cardio", "Strenght", "Todos"])
 
 if st.button("Filtrar datos"):
     df_filtrado=df.copy()
@@ -177,5 +177,5 @@ if st.button("Filtrar datos"):
         df_filtrado = df_filtrado[df_filtrado["Workout_Type"]==tipo_ej]
 
         st.success("Datos filtrados exitosamente")
-        
+
     st.dataframe(df_filtrado)
