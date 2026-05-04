@@ -272,4 +272,5 @@ if st.button("Filtrar datos de Netflix"):
     st.dataframe(df_filtrado2)
 
 #STEAM STORE#
-
+st.header("Filtración de datos - Steam Store")
+df3 = pd.read_csv("steam_store.csv")
