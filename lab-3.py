@@ -295,7 +295,7 @@ id=st.text_input("Ingrese el ID de la serie/pelicula para filtrar (formato: 's' 
 tipo=st.selectbox("Seleccione el tipo de programa para filtrar: ", ["Movie", "TV Show", "Todos"])
 origen=st.text_input("Ingrese el país de origen para filtrar (filtrado en inglés): ")
 added=st.text_input("Ingrese la fecha de añadimiento a Netflix para filtrar (formato: 'DD -abrv. mes- AA')")
-release=st.text_input("Ingrese el año de referencia para filtrar (formato: 'AAAA')")
+release=st.number_input("Ingrese el año de referencia para filtrar (formato: 'AAAA')")
 rating=st.selectbox("Seleccione la clasificación por edades para filtrar: ", ["G", "TV-MA", "TV-Y7", "PG", "PG-13", "TV-14", "R", "Todos"])
 duracion_min=st.text_input("Ingrese la duración de minutos para filtrar: ")
 duracion_season=st.text_input("Ingrese la cantidad de temporadas para filtrar: ")
@@ -371,8 +371,8 @@ columnas=[
     "Electric Utility"
 ]
 tipo_power=st.selectbox("Seleccione el tipo de vehículo eléctrico para filtrar: ", ["Battery Electric Vehicle (BEV)", "Plug-in Hybrid Electric Vehicle (PHEV)", "Todos"])
-modelo=st.text_input("Ingrese el año del modelo para filtrar: ", min_value=2000, max_value=2050, key="modelo_año_electricv")
-base=st.text_input("Ingrese el precio base para filtrar: ", min_value=0, max_value=845000)
+modelo=st.number_input("Ingrese el año del modelo para filtrar: ", min_value=2000, max_value=2050, key="modelo_año_electricv")
+base=st.number_input("Ingrese el precio base para filtrar: ", min_value=0, max_value=845000)
 validacion=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion_base_electricv")
 
 if st.button("Filtrar datos de vehículos eléctricos"):
@@ -401,7 +401,7 @@ if st.button("Filtrar datos de vehículos eléctricos"):
         elif validacion=="No aplica":
             st.warning("No se aplicará ningún filtro de comparación para precio base")
     st.success("Datos filtrados exitosamente")
-st.dataframe(df_filtrado3)
+    st.dataframe(df_filtrado3)
 
 #---------------------------------PARTE 4-------------------------------
 st.title("Parte 4. Exploración Avanzada ")
@@ -432,4 +432,89 @@ ax1.set_xlabel("Categoría")
 ax1.set_ylabel("Cantidad")
 st.pyplot(fig1)
 
+#AGRUPACIÓN
+st.subheader("Análisis Agrupado (Promedios y Desviación)")
+# Ajustar nombres de columnas según el CSV
+resumen_electricv = df_electricv.groupby('Rango Categoria', observed=False).agg({
+    'Base_MSRP': 'mean',
+    'Model Year': 'mean',
+    'Electric_Range': 'std'
+})
+st.table(resumen_electricv)
 
+
+# 2. GIMNASIO
+st.header("2. Análisis de Gimnasio")
+
+# Crear variable categórica
+# Rangos: <3 (Baja), 3-5 (Moderada), 6-7 (Alta)
+bins_gym = [0, 3, 6, 8]
+labels_gym = ['Baja', 'Moderada', 'Alta']
+df_gym['NivelFrecuencia'] = pd.cut(df_gym['Workout_Frequency (days/week)'], bins=bins_gym, labels=labels_gym, right=False)
+
+st.subheader("Conteo por Nivel de Frecuencia")
+conteo_gym = df_gym['NivelFrecuencia'].value_counts()
+st.write(conteo_gym)
+
+st.subheader("Gráfico de Frecuencia")
+fig2, ax2 = plt.subplots()
+conteo_gym.plot(kind='bar', ax=ax2, color='orange')
+ax2.set_title("Registros por Nivel de Frecuencia al Gimnasio")
+ax2.set_xlabel("Nivel")
+ax2.set_ylabel("Cantidad")
+st.pyplot(fig2)
+
+st.subheader("Análisis Agrupado")
+resumen_gym = df_gym.groupby('NivelFrecuencia', observed=False).agg({
+    'Session_Duration (hours)': 'mean',
+    'Experience_Level': 'mean',
+    'BMI': 'std'
+})
+st.table(resumen_gym)
+
+
+# 3. VIDEOJUEGOS (STEAM)
+st.header("3. Análisis de Videojuegos")
+
+# Identificar nombres de columnas, porque suele variar al csv estar en inglés
+col_p = 'price' if 'price' in df_steam.columns else 'Precio'
+col_d = 'discount' if 'discount' in df_steam.columns else 'salePercentage'
+
+#Existen datos de cada columna que pueden ser palabras, pero solo queremos números, por eso primero se deberían
+# "filtrar", a modo de que no tenga error
+
+# 1. Limpiar PRECIO: Convertir a número y poner 0 a los "Free", como en excel, solo sustituyo
+df_steam[col_p] = pd.to_numeric(df_steam[col_p], errors='coerce').fillna(0)
+
+# 2. Limpiar DESCUENTO: 
+# Si los descuentos tienen el signo '%', primero lo quitamos
+if df_steam[col_d].dtype == 'object':
+    df_steam[col_d] = df_steam[col_d].str.replace('%', '', regex=False)
+
+# Convertir a número y poner 0 a los que estén vacíos o tengan texto
+df_steam[col_d] = pd.to_numeric(df_steam[col_d], errors='coerce').fillna(0)
+
+# Crear categorías de precio
+bins_games = [0, 10, 25, float('inf')]
+labels_games = ['Baja', 'Media', 'Alta']
+df_steam['GamaJuego'] = pd.cut(df_steam[col_p], bins=bins_games, labels=labels_games, right=False)
+
+st.subheader("Conteo por Gama de Juego")
+conteo_steam = df_steam['GamaJuego'].value_counts()
+st.write(conteo_steam)
+
+st.subheader("Gráfico de Gamas")
+fig3, ax3 = plt.subplots()
+conteo_steam.plot(kind='bar', ax=ax3, color='purple')
+ax3.set_title("Cantidad de Juegos por Gama de Precio")
+ax3.set_xlabel("Gama")
+ax3.set_ylabel("Cantidad")
+st.pyplot(fig3)
+
+st.subheader("Análisis Agrupado de Precios")
+# Ahora que ambas columnas son números, el .agg() funcionará perfectamente
+resumen_steam = df_steam.groupby('GamaJuego', observed=False).agg({
+    col_p: ['mean', 'std'],
+    col_d: 'mean'
+})
+st.table(resumen_steam)
