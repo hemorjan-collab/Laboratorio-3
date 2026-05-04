@@ -246,7 +246,7 @@ if st.button("Filtrar datos"):
     df_filtrado1=df1.copy()
 
     if igualdad=="Igual a":
-        df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]==valor_ref]
+        df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]==float(valor_ref)]
 
     elif igualdad=="Mayor que":
         df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]>float(valor_ref)]
@@ -406,6 +406,9 @@ if st.button("Filtrar datos de vehículos eléctricos"):
 #---------------------STEAM----------------------
 st.header("Filtración de datos - Steam Store")
 df4 = pd.read_csv("steam_store_data_2024.csv")
+df4["price"] = df4["price"].str.extract(r"(\d+)").astype(float)
+df4["salePercentage"] = df4["salePercentage"].str.extract(r"(\d+)").astype(float)
+
 columnas=[
     "title",
     "description",
