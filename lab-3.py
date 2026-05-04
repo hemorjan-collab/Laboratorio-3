@@ -395,3 +395,31 @@ resumen_electricv = df_electricv.groupby('Rango Categoria', observed=False).agg(
 st.table(resumen_electricv)
 
 
+# 2. GIMNASIO
+st.header("2. Análisis de Gimnasio")
+
+# Crear variable categórica
+# Rangos: <3 (Baja), 3-5 (Moderada), 6-7 (Alta)
+bins_gym = [0, 3, 6, 8]
+labels_gym = ['Baja', 'Moderada', 'Alta']
+df_gym['NivelFrecuencia'] = pd.cut(df_gym['Workout_Frequency (days/week)'], bins=bins_gym, labels=labels_gym, right=False)
+
+st.subheader("Conteo por Nivel de Frecuencia")
+conteo_gym = df_gym['NivelFrecuencia'].value_counts()
+st.write(conteo_gym)
+
+st.subheader("Gráfico de Frecuencia")
+fig2, ax2 = plt.subplots()
+conteo_gym.plot(kind='bar', ax=ax2, color='orange')
+ax2.set_title("Registros por Nivel de Frecuencia al Gimnasio")
+ax2.set_xlabel("Nivel")
+ax2.set_ylabel("Cantidad")
+st.pyplot(fig2)
+
+st.subheader("Análisis Agrupado")
+resumen_gym = df_gym.groupby('NivelFrecuencia', observed=False).agg({
+    'Session_Duration (hours)': 'mean',
+    'Experience_Level': 'mean',
+    'BMI': 'std'
+})
+st.table(resumen_gym)
