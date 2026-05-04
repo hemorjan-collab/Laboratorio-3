@@ -355,7 +355,8 @@ if st.button("Filtrar datos de Netflix"):
     st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado2)
 
-    #VEHICULOS ELECTRICOS#
+
+#VEHICULOS ELECTRICOS#
 st.header("Filtración de datos - Vehículos Eléctricos")
 df3 = pd.read_csv("Electric_Vehicle_Population-2.csv")
 columnas=[
@@ -518,3 +519,38 @@ resumen_steam = df_steam.groupby('GamaJuego', observed=False).agg({
     col_d: 'mean'
 })
 st.table(resumen_steam)
+
+# 4. NETFLIX
+st.header("4. Análisis de Netflix")
+
+# Mapeo manual para Tipo de Audiencia
+mapeo = {
+    'G': 'Niños', 'TV-Y': 'Niños', 'TV-G': 'Niños', 'TV-Y7': 'Niños', 'TV-Y7-FV': 'Niños',
+    'PG': 'Adolescentes', 'TV-PG': 'Adolescentes',
+    'PG-13': 'Adultos Jóvenes', 'TV-14': 'Adultos Jóvenes',
+    'R': 'Adultos', 'TV-MA': 'Adultos', 'NC-17': 'Adultos'
+}
+df_netflix['TipoAudiencia'] = df_netflix['rating'].map(mapeo)
+
+st.subheader("Conteo por Tipo de Audiencia")
+conteo_net = df_netflix['TipoAudiencia'].value_counts()
+st.write(conteo_net)
+
+st.subheader("Gráfico de Audiencias")
+fig4, ax4 = plt.subplots()
+conteo_net.plot(kind='bar', ax=ax4, color='red')
+ax4.set_title("Contenido de Netflix por Audiencia")
+ax4.set_xlabel("Audiencia")
+ax4.set_ylabel("Cantidad")
+st.pyplot(fig4)
+
+st.subheader("Análisis Agrupado (Contenido y Duración)")
+# Extraer número de la columna duration para promediar
+df_netflix['duration_min'] = df_netflix['duration'].str.extract('(\d+)').astype(float)
+
+resumen_net = df_netflix.groupby('TipoAudiencia', observed=False).agg({
+    'type': lambda x: x.mode()[0] if not x.mode().empty else "N/A",
+    'duration_min': 'mean'
+}).rename(columns={'type': 'Contenido más común', 'duration_min': 'Duración Promedio'})
+
+st.table(resumen_net)
