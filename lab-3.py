@@ -423,3 +423,50 @@ resumen_gym = df_gym.groupby('NivelFrecuencia', observed=False).agg({
     'BMI': 'std'
 })
 st.table(resumen_gym)
+
+
+# 3. VIDEOJUEGOS (STEAM)
+st.header("3. Análisis de Videojuegos")
+
+# Identificar nombres de columnas, porque suele variar al csv estar en inglés
+col_p = 'price' if 'price' in df_steam.columns else 'Precio'
+col_d = 'discount' if 'discount' in df_steam.columns else 'salePercentage'
+
+#Existen datos de cada columna que pueden ser palabras, pero solo queremos números, por eso primero se deberían
+# "filtrar", a modo de que no tenga error
+
+# 1. Limpiar PRECIO: Convertir a número y poner 0 a los "Free", como en excel, solo sustituyo
+df_steam[col_p] = pd.to_numeric(df_steam[col_p], errors='coerce').fillna(0)
+
+# 2. Limpiar DESCUENTO: 
+# Si los descuentos tienen el signo '%', primero lo quitamos
+if df_steam[col_d].dtype == 'object':
+    df_steam[col_d] = df_steam[col_d].str.replace('%', '', regex=False)
+
+# Convertir a número y poner 0 a los que estén vacíos o tengan texto
+df_steam[col_d] = pd.to_numeric(df_steam[col_d], errors='coerce').fillna(0)
+
+# Crear categorías de precio
+bins_games = [0, 10, 25, float('inf')]
+labels_games = ['Baja', 'Media', 'Alta']
+df_steam['GamaJuego'] = pd.cut(df_steam[col_p], bins=bins_games, labels=labels_games, right=False)
+
+st.subheader("Conteo por Gama de Juego")
+conteo_steam = df_steam['GamaJuego'].value_counts()
+st.write(conteo_steam)
+
+st.subheader("Gráfico de Gamas")
+fig3, ax3 = plt.subplots()
+conteo_steam.plot(kind='bar', ax=ax3, color='purple')
+ax3.set_title("Cantidad de Juegos por Gama de Precio")
+ax3.set_xlabel("Gama")
+ax3.set_ylabel("Cantidad")
+st.pyplot(fig3)
+
+st.subheader("Análisis Agrupado de Precios")
+# Ahora que ambas columnas son números, el .agg() funcionará perfectamente
+resumen_steam = df_steam.groupby('GamaJuego', observed=False).agg({
+    col_p: ['mean', 'std'],
+    col_d: 'mean'
+})
+st.table(resumen_steam)
