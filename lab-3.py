@@ -355,8 +355,23 @@ if st.button("Filtrar datos de Netflix"):
     st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado2)
 
-#STEAM STORE#
-aaaaaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaaaaaaa
+#---------------------------------PARTE 4-------------------------------
+st.title("Parte 4. Exploración Avanzada ")
+# 1. VEHÍCULOS ELÉCTRICOS
+st.header("1. Análisis de Vehículos Eléctricos")
+#Se agrega una nueva columna, pero no se visualiza, porque no se dicta como tal en las intrucciones
+# Rangos: <100 (Bajo), 100-250 (Medio), >250 (Alto), se representan en bin y labels, como si fuera una frasco y su etiqueta
+bins_electricv = [0, 100, 250, float('inf')]
+labels_electricv = ['Bajo', 'Medio', 'Alto']
+#pd cut se utiliza como etiqueta
+#Rango Categoría porque así pide la instrucción
+df_electricv['Rango Categoria'] = pd.cut(df_electricv['Electric_Range'], bins=bins_electricv, labels=labels_electricv, right=False)
+
+#Ahora realizo la segunda parte para saber la cantidad de registros de cada categoría
+st.subheader("Conteo por Categoría de Rango")
+#Sigo utilizando las variables establecidas desde el primer ejercicio y creo nuevas a modo de organización
+# .count devuelve un recuento de valores, en este caso los de la nueva columna
+conteo_electricv = df_electricv['Rango Categoria'].value_counts()
+st.write(conteo_electricv)
 
 
