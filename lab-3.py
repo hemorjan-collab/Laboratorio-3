@@ -384,4 +384,14 @@ ax1.set_xlabel("Categoría")
 ax1.set_ylabel("Cantidad")
 st.pyplot(fig1)
 
+#AGRUPACIÓN
+st.subheader("Análisis Agrupado (Promedios y Desviación)")
+# Ajustar nombres de columnas según el CSV
+resumen_electricv = df_electricv.groupby('Rango Categoria', observed=False).agg({
+    'Base_MSRP': 'mean',
+    'Model Year': 'mean',
+    'Electric_Range': 'std'
+})
+st.table(resumen_electricv)
+
 
