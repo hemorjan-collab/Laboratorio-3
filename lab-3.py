@@ -293,7 +293,3 @@ if st.button("Filtrar datos de Netflix"):
     st.dataframe(df_filtrado2)
 
 #STEAM STORE#
-aaaaaaaaaaaaaaaaaaa
-aaaaaaaaaaaaaaaaaaa
-
-
