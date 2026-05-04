@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
+st.title("Análisis de dataset")
 # 1. Cargar archivo de electric vehicles
 df_electricv = pd.read_csv("Electric_Vehicle_Population-2.csv")
 
@@ -22,8 +23,70 @@ st.write(df_electricv.head(6))
 # 5. Estadísticas generales
 st.subheader("Estadísticas de variables numéricas")
 st.write(df_electricv.describe())
+#------------DIVISIÓN----------------
+# 1. Cargar archivo de electric vehicles
+df_gym = pd.read_csv("GymExerciseTracking.csv")
 
-st.title("Análisis de dataset")
+st.title("Tabla de Gym Exercises")
+
+# 2. Número de filas y columnas
+filas, columnas = df_gym.shape
+st.write(f"Filas: {filas}, Columnas: {columnas}")
+
+# 3. Nombres de columnas
+st.subheader("Columnas del dataset")
+st.write(df_gym.columns.tolist())
+
+# 4. Primeras 6 filas
+st.subheader("Primeras 6 filas")
+st.write(df_gym.head(6))
+
+# 5. Estadísticas generales
+st.subheader("Estadísticas de variables numéricas")
+st.write(df_gym.describe())
+#------------DIVISIÓN----------------
+# 1. Cargar archivo de electric vehicles
+df_steam = pd.read_csv("steam_store_data_2024.csv")
+
+st.title("Tabla de Steam Store")
+
+# 2. Número de filas y columnas
+filas, columnas = df_steam.shape
+st.write(f"Filas: {filas}, Columnas: {columnas}")
+
+# 3. Nombres de columnas
+st.subheader("Columnas del dataset")
+st.write(df_steam.columns.tolist())
+
+# 4. Primeras 6 filas
+st.subheader("Primeras 6 filas")
+st.write(df_steam.head(6))
+
+# 5. Estadísticas generales
+st.subheader("Estadísticas de variables numéricas")
+st.write(df_steam.describe())
+#------------DIVISIÓN----------------
+# 1. Cargar archivo de electric vehicles
+df_netflix = pd.read_csv("netflix_titles.csv")
+
+st.title("Tabla de Netflix Titles")
+
+# 2. Número de filas y columnas
+filas, columnas = df_netflix.shape
+st.write(f"Filas: {filas}, Columnas: {columnas}")
+
+# 3. Nombres de columnas
+st.subheader("Columnas del dataset")
+st.write(df_netflix.columns.tolist())
+
+# 4. Primeras 6 filas
+st.subheader("Primeras 6 filas")
+st.write(df_netflix.head(6))
+
+# 5. Estadísticas generales
+st.subheader("Estadísticas de variables numéricas")
+st.write(df_netflix.describe())
+
  #DATASET|1
 st.header("Agregar nuevo registro de Gimnasio")
 df=pd.read_csv("GymExerciseTracking.csv")
@@ -150,7 +213,7 @@ if st.button("Agregar serie/pelicula"):
 st.dataframe(df)
 
 
-###PARTE 3###
+#-----------PARTE 3--------------
     #GIMNASIO#
 st.header("Filtración de datos - gimnasio")
 df1 = pd.read_csv("GymExerciseTracking.csv")
@@ -292,4 +355,81 @@ if st.button("Filtrar datos de Netflix"):
     st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado2)
 
-#STEAM STORE#
+    #VEHICULOS ELECTRICOS#
+st.header("Filtración de datos - Vehículos Eléctricos")
+df3 = pd.read_csv("Electric_Vehicle_Population-2.csv")
+columnas=[
+    "VIN (1-10)",
+    "City",
+    "Model Year",
+    "Make",
+    "Model",
+    "Electric_Vehicle_Type",
+    "CAFV_Eligibility",
+    "Electric_Range",
+    "Base_MSRP",
+    "Electric Utility"
+]
+tipo_power=st.selectbox("Seleccione el tipo de vehículo eléctrico para filtrar: ", ["Battery Electric Vehicle (BEV)", "Plug-in Hybrid Electric Vehicle (PHEV)", "Todos"])
+modelo=st.text_input("Ingrese el año del modelo para filtrar: ", min_value=2000, max_value=2050, key="modelo_año_electricv")
+base=st.text_input("Ingrese el precio base para filtrar: ", min_value=0, max_value=845000)
+validacion=st.selectbox("Seleccione el tipo de comparación: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion_base_electricv")
+
+if st.button("Filtrar datos de vehículos eléctricos"):
+    df_filtrado3=df3.copy()
+
+    if tipo_power != "Todos":
+        df_filtrado3 = df_filtrado3[df_filtrado3["Electric_Vehicle_Type"]==tipo_power]
+
+    if modelo:
+        if validacion=="Igual a":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Model Year"]==int(modelo)]
+        elif validacion=="Mayor que":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Model Year"] > float(modelo)]
+        elif validacion=="Menor que":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Model Year"] < float(modelo)]
+        elif validacion=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para año del modelo")
+
+    if base:
+        if validacion=="Igual a":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Base_MSRP"]==float(base)]
+        elif validacion=="Mayor que":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Base_MSRP"] > float(base)]
+        elif validacion=="Menor que":
+            df_filtrado3 = df_filtrado3[df_filtrado3["Base_MSRP"] < float(base)]
+        elif validacion=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para precio base")
+    st.success("Datos filtrados exitosamente")
+st.dataframe(df_filtrado3)
+
+#---------------------------------PARTE 4-------------------------------
+st.title("Parte 4. Exploración Avanzada ")
+# 1. VEHÍCULOS ELÉCTRICOS
+st.header("1. Análisis de Vehículos Eléctricos")
+#Se agrega una nueva columna, pero no se visualiza, porque no se dicta como tal en las intrucciones
+# Rangos: <100 (Bajo), 100-250 (Medio), >250 (Alto), se representan en bin y labels, como si fuera una frasco y su etiqueta
+bins_electricv = [0, 100, 250, float('inf')]
+labels_electricv = ['Bajo', 'Medio', 'Alto']
+#pd cut se utiliza como etiqueta
+#Rango Categoría porque así pide la instrucción
+df_electricv['Rango Categoria'] = pd.cut(df_electricv['Electric_Range'], bins=bins_electricv, labels=labels_electricv, right=False)
+
+#Ahora realizo la segunda parte para saber la cantidad de registros de cada categoría
+st.subheader("Conteo por Categoría de Rango")
+#Sigo utilizando las variables establecidas desde el primer ejercicio y creo nuevas a modo de organización
+# .count devuelve un recuento de valores, en este caso los de la nueva columna
+conteo_electricv = df_electricv['Rango Categoria'].value_counts()
+st.write(conteo_electricv)
+# GRAFICAR 
+st.subheader("Gráfico de Distribución")
+fig1, ax1 = plt.subplots() #una función para crear figuras y subgráficos de un solo
+#Establezo las propiedades de la gráfica como su color y el tipo (en barras)
+conteo_electricv.plot(kind='bar', ax=ax1, color='teal')
+#Los títulos que llevará cada lada y en sí el de la gráfica
+ax1.set_title("Vehículos por Categoría de Rango Eléctrico")
+ax1.set_xlabel("Categoría")
+ax1.set_ylabel("Cantidad")
+st.pyplot(fig1)
+
+
