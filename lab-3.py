@@ -243,29 +243,29 @@ genero=st.selectbox("Seleccione el género para filtrar: ", ["Male", "Female", "
 tipo_ej=st.selectbox("Seleccione el tipo de ejercicio para filtrar: ", ["Yoga", "HIIT", "Cardio", "Strenght", "Todos"])
 
 if st.button("Filtrar datos"):
-    df_filtrado=df.copy()
+    df_filtrado1=df1.copy()
 
     if igualdad=="Igual a":
-        df_filtrado = df_filtrado[df_filtrado[col_elegida]==valor_ref]
+        df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]==valor_ref]
 
-    elif igualdad=="Mayor que" and df[col_elegida].dtype != "object":
-        df_filtrado = df_filtrado[df_filtrado[col_elegida]>float(valor_ref)]
+    elif igualdad=="Mayor que":
+        df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]>float(valor_ref)]
 
-    elif igualdad=="Menor que" and df[col_elegida].dtype != "object":
-        df_filtrado = df_filtrado[df_filtrado[col_elegida]<float(valor_ref)]
+    elif igualdad=="Menor que":
+        df_filtrado1 = df_filtrado1[df_filtrado1[col_elegida]<float(valor_ref)]
     
     elif igualdad=="No aplica":
         st.warning("No se aplicará ningún filtro de comparación")
 
     if genero != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["Gender"]==genero]
+        df_filtrado1 = df_filtrado1[df_filtrado1["Gender"]==genero]
 
     if tipo_ej != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["Workout_Type"]==tipo_ej]
+        df_filtrado1 = df_filtrado1[df_filtrado1["Workout_Type"]==tipo_ej]
 
         st.success("Datos filtrados exitosamente")
 
-    st.dataframe(df_filtrado)
+    st.dataframe(df_filtrado1)
 
     #NETFLIX#
 st.header("Filtración de datos - Netflix")
@@ -403,6 +403,53 @@ if st.button("Filtrar datos de vehículos eléctricos"):
             st.warning("No se aplicará ningún filtro de comparación para precio base")
     st.success("Datos filtrados exitosamente")
     st.dataframe(df_filtrado3)
+#---------------------STEAM----------------------
+st.header("Filtración de datos - Steam Store")
+df4 = pd.read_csv("steam_store_data_2024.csv")
+columnas=[
+    "title",
+    "description",
+    "price",
+    "salePercentage",
+    "recentReviews",
+    "allReviews",
+]
+precio=st.number_input("Ingrese el precio para filtrar: ", min_value=0, max_value=50)
+descuento=st.number_input("Ingrese el porcentaje de descuento para filtrar: ", min_value=0, max_value=100)
+reviews_nuevas=st.selectbox("Seleccione el tipo de comparación para reseñas recientes: ", ["Overwhelmingly Positive", "Very Positive", "Mostly Positive", "Mixed", "Mostly Negative", "No aplica"], key="comparacion_reviews_nuevas_steam")
+comparacion_precio=st.selectbox("Seleccione el tipo de comparación para precio: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion_precio_steam")
+comparacion_descuento=st.selectbox("Seleccione el tipo de comparación para descuento: ", ["Igual a", "Mayor que", "Menor que", "No aplica"], key="comparacion_descuento_steam")
+
+if st.button("Filtrar datos de Steam Store"):
+    df_filtrado4=df4.copy()
+
+    if precio:
+        if comparacion_precio=="Igual a":
+            df_filtrado4 = df_filtrado4[df_filtrado4["price"]==float(precio)]
+        elif comparacion_precio=="Mayor que":
+            df_filtrado4 = df_filtrado4[df_filtrado4["price"] > float(precio)]
+        elif comparacion_precio=="Menor que":
+            df_filtrado4 = df_filtrado4[df_filtrado4["price"] < float(precio)]
+        elif comparacion_precio=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para precio")
+    
+    if descuento:
+        if comparacion_descuento=="Igual a":
+            df_filtrado4 = df_filtrado4[df_filtrado4["salePercentage"]==float(descuento)]
+        elif comparacion_descuento=="Mayor que":
+            df_filtrado4 = df_filtrado4[df_filtrado4["salePercentage"] > float(descuento)]
+        elif comparacion_descuento=="Menor que":
+            df_filtrado4 = df_filtrado4[df_filtrado4["salePercentage"] < float(descuento)]
+        elif comparacion_descuento=="No aplica":
+            st.warning("No se aplicará ningún filtro de comparación para descuento")
+    
+    if reviews_nuevas != "No aplica":
+        df_filtrado4 = df_filtrado4[df_filtrado4["recentReviews"]==reviews_nuevas]
+
+    st.success("Datos filtrados exitosamente")
+    st.dataframe(df_filtrado4)
+
+
 
 #---------------------------------PARTE 4-------------------------------
 st.title("Parte 4. Exploración Avanzada ")
