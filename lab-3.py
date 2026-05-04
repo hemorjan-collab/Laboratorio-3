@@ -465,7 +465,8 @@ labels_electricv = ['Bajo', 'Medio', 'Alto']
 #pd cut se utiliza como etiqueta
 #Rango Categoría porque así pide la instrucción
 df_electricv['Rango Categoria'] = pd.cut(df_electricv['Electric_Range'], bins=bins_electricv, labels=labels_electricv, right=False)
-
+df_electricv.to_csv("Electric_Vehicle_Population_Actualizado.csv", index=False)
+st.success("Columna 'Rango Categoria' añadida a Vehículos Eléctricos.")
 #Ahora realizo la segunda parte para saber la cantidad de registros de cada categoría
 st.subheader("Conteo por Categoría de Rango")
 #Sigo utilizando las variables establecidas desde el primer ejercicio y creo nuevas a modo de organización
@@ -502,7 +503,8 @@ st.header("2. Análisis de Gimnasio")
 bins_gym = [0, 3, 6, 8]
 labels_gym = ['Baja', 'Moderada', 'Alta']
 df_gym['NivelFrecuencia'] = pd.cut(df_gym['Workout_Frequency (days/week)'], bins=bins_gym, labels=labels_gym, right=False)
-
+df_gym.to_csv("GymExerciseTracking_Actualizado.csv", index=False)
+st.success("Columna 'NivelFrecuencia' añadida a Gimnasio.")
 st.subheader("Conteo por Nivel de Frecuencia")
 conteo_gym = df_gym['NivelFrecuencia'].value_counts()
 st.write(conteo_gym)
@@ -549,6 +551,8 @@ df_steam[col_d] = pd.to_numeric(df_steam[col_d], errors='coerce').fillna(0)
 bins_games = [0, 10, 25, float('inf')]
 labels_games = ['Baja', 'Media', 'Alta']
 df_steam['GamaJuego'] = pd.cut(df_steam[col_p], bins=bins_games, labels=labels_games, right=False)
+df_steam.to_csv("steam_store_data_2024_Actualizado.csv", index=False)
+st.success("Columna 'GamaJuego' añadida a Videojuegos.")
 
 st.subheader("Conteo por Gama de Juego")
 conteo_steam = df_steam['GamaJuego'].value_counts()
@@ -573,7 +577,7 @@ st.table(resumen_steam)
 # 4. NETFLIX
 st.header("4. Análisis de Netflix")
 
-# Mapeo manual para Tipo de Audiencia
+# Mapeo manual para Tipo de Audiencia, al ser categorías de distinto tipo de dato
 mapeo = {
     'G': 'Niños', 'TV-Y': 'Niños', 'TV-G': 'Niños', 'TV-Y7': 'Niños', 'TV-Y7-FV': 'Niños',
     'PG': 'Adolescentes', 'TV-PG': 'Adolescentes',
@@ -581,6 +585,8 @@ mapeo = {
     'R': 'Adultos', 'TV-MA': 'Adultos', 'NC-17': 'Adultos'
 }
 df_netflix['TipoAudiencia'] = df_netflix['rating'].map(mapeo)
+df_netflix.to_csv("netflix_titles_Actualizado.csv", index=False)
+st.success("Columna 'TipoAudiencia' añadida a Netflix.")
 
 st.subheader("Conteo por Tipo de Audiencia")
 conteo_net = df_netflix['TipoAudiencia'].value_counts()
