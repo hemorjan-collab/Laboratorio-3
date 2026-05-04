@@ -2,6 +2,27 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
+# 1. Cargar archivo de electric vehicles
+df_electricv = pd.read_csv("Electric_Vehicle_Population-2.csv")
+
+st.title("Tabla de Electric Vehicles")
+
+# 2. Número de filas y columnas
+filas, columnas = df_electricv.shape
+st.write(f"Filas: {filas}, Columnas: {columnas}")
+
+# 3. Nombres de columnas
+st.subheader("Columnas del dataset")
+st.write(df_electricv.columns.tolist())
+
+# 4. Primeras 6 filas
+st.subheader("Primeras 6 filas")
+st.write(df_electricv.head(6))
+
+# 5. Estadísticas generales
+st.subheader("Estadísticas de variables numéricas")
+st.write(df_electricv.describe())
+
 st.title("Análisis de dataset")
  #DATASET|1
 st.header("Agregar nuevo registro de Gimnasio")
@@ -272,5 +293,7 @@ if st.button("Filtrar datos de Netflix"):
     st.dataframe(df_filtrado2)
 
 #STEAM STORE#
-st.header("Filtración de datos - Steam Store")
-df3 = pd.read_csv("steam_store.csv")
+aaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaa
+
+
