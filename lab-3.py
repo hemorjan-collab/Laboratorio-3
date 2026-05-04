@@ -373,5 +373,15 @@ st.subheader("Conteo por Categoría de Rango")
 # .count devuelve un recuento de valores, en este caso los de la nueva columna
 conteo_electricv = df_electricv['Rango Categoria'].value_counts()
 st.write(conteo_electricv)
+# GRAFICAR 
+st.subheader("Gráfico de Distribución")
+fig1, ax1 = plt.subplots() #una función para crear figuras y subgráficos de un solo
+#Establezo las propiedades de la gráfica como su color y el tipo (en barras)
+conteo_electricv.plot(kind='bar', ax=ax1, color='teal')
+#Los títulos que llevará cada lada y en sí el de la gráfica
+ax1.set_title("Vehículos por Categoría de Rango Eléctrico")
+ax1.set_xlabel("Categoría")
+ax1.set_ylabel("Cantidad")
+st.pyplot(fig1)
 
 
